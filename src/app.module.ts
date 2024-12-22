@@ -9,6 +9,7 @@ import { User } from './users/user.entity';
 import { EmployeesModule } from './employees/employees.module';
 import { LogsModule } from './logs/logs.module';
 import { Log } from './logs/logs.entity';
+import { Employee } from './employees/employees.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { Log } from './logs/logs.entity';
       password: 'admin',
       entities: [
         User,
-        Log
+        Log,
+        Employee
       ],
       synchronize: true,
     }),

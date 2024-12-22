@@ -26,3 +26,42 @@ GET http://localhost:3000/auth/users
 
 ### get all logs
 GET http://localhost:3000/log/api/logs
+
+### onboarding employee
+POST http://localhost:3000/auth/onboard
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "emp",
+  "email": "john.emp@example.com",
+  "phoneNumber": "+1234567890",
+  "position": "Software Engineer",
+  "department": "Engineering",
+  "salary": 60000,
+  "hireDate": "2024-01-01T09:00:00Z"
+}
+
+### get all employees
+GET http://localhost:3000/employee/employees
+
+### get employee by id
+GET http://localhost:3000/employee/employees/1
+
+### Update Employee by ID
+PUT http://localhost:3000/employee/update/1
+Content-Type: application/json
+
+{
+  "firstName": "Adir",
+  "lastName": "Emp",
+  "email": "john.emp@example.com",
+  "phoneNumber": "+1234567890",
+  "position": "ML",
+  "department": "Engineering",
+  "salary": 60000,
+  "hireDate": "2024-01-01T09:00:00Z"
+}
+
+### Delete Employee by ID
+DELETE http://localhost:3000/employee/delete/1

@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { EmployeesService } from 'src/employees/employees.service';
 import { LogsService } from 'src/logs/logs.service';
 import { CreateUserDto } from 'src/users/dto/create-user-dto';
 import { UsersService } from 'src/users/users.service';
@@ -6,7 +7,8 @@ import { UsersService } from 'src/users/users.service';
 @Controller('auth')
 export class AuthController {
     constructor(private userService : UsersService,
-        private logService: LogsService
+        private logService: LogsService,
+        private employeeService: EmployeesService
     ) {}
 
     @Post('register')
@@ -59,6 +61,27 @@ export class AuthController {
     async getUsers() {
         try {
             return await this.userService.findAll();
+        } catch (error) {
+            return error;
+        }
+    }
+
+    //onboard employee
+    @Post('onboard')
+    async onboardEmployee(@Body() employee) {
+        try {
+            const newEmployee = await this.employeeService.createEmployee(employee);
+            const log = {
+                id: Math.floor(Math.random() * 1000),
+                userId: newEmployee.id,
+                action: 'onboard',
+                actorType: 'employee',
+                actorId: newEmployee.id,
+                targetId : newEmployee.id,
+                timestamp: new Date()
+            };
+            await this.logService.createLog(log);
+            return newEmployee;
         } catch (error) {
             return error;
         }
