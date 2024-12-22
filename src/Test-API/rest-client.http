@@ -1,0 +1,28 @@
+### POST request to create a user
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Abc",
+  "lastName": "ae",
+  "email": "john.doe2@example.com",
+  "password": "securePassword123",
+  "dateOfBirth": "1995-06-15",
+  "address": "123 Main Street, Springfield",
+  "phoneNumber": "+1234567890"
+}
+
+### POST request to login
+GET http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe2@example.com",
+  "password": "securePassword123"
+}
+
+### Get request to get all users
+GET http://localhost:3000/auth/users
+
+### get all logs
+GET http://localhost:3000/log/api/logs
