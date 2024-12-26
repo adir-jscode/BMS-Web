@@ -24,7 +24,7 @@ export class CustomerController {
   findOne(@Param('id') id: number) {
     return this.customerService.findOne(id);
   }
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Put(':id')
   update(@Param('id') id: number, @Body() updateCustomerDto: UpdateCustomerDto) {
     return this.customerService.update(id, updateCustomerDto);

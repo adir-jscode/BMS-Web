@@ -6,6 +6,7 @@ import { CreateTransactionDto } from './dto/create-transaction-dto';
 import { Inject } from '@nestjs/common';
 import { forwardRef } from '@nestjs/common';
 import { AccountService } from 'src/account/account.service';  
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class TransactionService {
@@ -15,6 +16,7 @@ export class TransactionService {
 
     @Inject(forwardRef(() => AccountService)) 
     private accountService: AccountService,
+    private mailerService: MailerService,
   ) {}
 
   async createTransaction(dto: CreateTransactionDto): Promise<Transaction> {
@@ -23,19 +25,10 @@ export class TransactionService {
     if (!account) {
       throw new NotFoundException('Account not found');
     }
-
-    
-
-    console.log("before deposit = " + account.balance);
-    console.log(typeof(account.balance));    
     if (dto.type === 'deposit') 
     {
-      console.log("want to add = " + dto.amount);
-      console.log(typeof(dto.amount));
       const oldBlance = Number(account.balance);
-      console.log("Old balance = " +oldBlance);
       const newBalance = oldBlance + dto.amount;
-      console.log("Final = " + newBalance);
       await this.accountService.updateBalance(account.id, newBalance);
     } 
     else 
@@ -51,7 +44,18 @@ export class TransactionService {
       ...dto,
       account,
     });
-    //return updated account;
+    //send email
+    await this.mailerService.sendMail({
+      to: account?.customer?.email,
+      subject: 'Transaction Alert',
+      template: './transaction',
+      context: {
+        accountNumber: account.accountNumber,
+        amount: dto.amount,
+        type: dto.type,
+        balance: account.balance,
+      },
+    });
     return this.transactionRepository.save(transaction);
   }
 

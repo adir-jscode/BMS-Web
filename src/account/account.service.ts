@@ -77,6 +77,6 @@ export class AccountService {
 
     //getAccountByAccountNumber
     async getAccountByAccountNumber(accountNumber: string): Promise<Account> {
-        return this.accountRepository.findOne({ where: { accountNumber } });
+        return this.accountRepository.findOne({ where: { accountNumber }, relations: ['customer'] });
     }
 }
