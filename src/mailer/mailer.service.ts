@@ -11,18 +11,20 @@ export class MailerService {
             port: this.configService.get<string>('EMAIL_PORT'),
             auth: {
                 user: this.configService.get<string>('EMAIL_USER'),
-                pass: this.configService.get<string>('EMAIL_PASS')
+                pass: this.configService.get<string>('EMAIL_PASSWORD'),
+                secure: false,
             },
         });
         return transporter;
     }
 
     async sendMails(EmailDto : EmailDto){
-        const {recipient, subject, text, html} = EmailDto;
+        const {subject, text, html} = EmailDto;
+        console.log(EmailDto.recipient);
         const transporter = this.emailTransport();
         const options : nodemailer.SendMailOptions = {
             from: this.configService.get<string>('EMAIL_USER'),
-            to: recipient,
+            to: EmailDto.recipient,
             subject: subject,
             text: text,
             html: html,

@@ -9,6 +9,7 @@ export class MailerController {
     @Post("send")
     async sendMail(@Body() EmailDto : EmailDto) {
         try {
+            console.log(EmailDto);
             await this.mailerService.sendMails(EmailDto);
             return { message: 'Email sent successfully' };
         } 
