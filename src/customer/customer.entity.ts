@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Account } from 'src/account/account.entity';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  CreateDateColumn, 
+  UpdateDateColumn, 
+  OneToMany 
+} from 'typeorm';
 
 @Entity('customers')
 export class Customer {
@@ -19,6 +27,9 @@ export class Customer {
 
   @Column()
   address: string;
+
+  @OneToMany(() => Account, (account) => account.customer)
+  accounts: Account[]; 
 
   @CreateDateColumn()
   createdAt: Date;
