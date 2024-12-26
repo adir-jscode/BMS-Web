@@ -48,6 +48,13 @@ export class AccountService {
     return this.accountRepository.save(account);
   }
 
+  async updateBalance(id: number, amount: number): Promise<Account> {
+    const account = await this.findOne(id);
+    account.balance += amount;
+    return this.accountRepository.save(account);
+  }
+  
+
   async deactivate(id: number): Promise<Account> {
     const account = await this.findOne(id);
     account.isActive = false;
@@ -59,4 +66,9 @@ export class AccountService {
     account.isActive = true;
     return this.accountRepository.save(account);
   }
+
+  //save
+    async save(account: Account): Promise<Account> {
+        return this.accountRepository.save(account);
+    }
 }

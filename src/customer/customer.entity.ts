@@ -1,4 +1,5 @@
 import { Account } from 'src/account/account.entity';
+import { Loan } from 'src/loan/loan.entity';
 import { 
   Entity, 
   PrimaryGeneratedColumn, 
@@ -30,6 +31,9 @@ export class Customer {
 
   @OneToMany(() => Account, (account) => account.customer)
   accounts: Account[]; 
+
+  @OneToMany(() => Loan, (loan) => loan.customer)
+  loans: Loan[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -11,7 +11,9 @@ export class AuthController {
     @Post('signup')
     async signup(@Body() userDTO : CreateUserDto) {
         try {
-            return await this.userService.create(userDTO);
+            await this.authService.sendOtpEmail(userDTO.email);
+             await this.userService.create(userDTO);
+             return { message: 'OTP sent to your email. Please verify your email.' };
         } 
         catch (error) {
             return error;
@@ -39,5 +41,29 @@ export class AuthController {
         }
     }
 
+@Post('verify-otp')
+async verifyOtp(@Body() { email, otp }: { email: string, otp: string }) {
+  try {
+    const isValid = await this.authService.verifyOtp(email, otp);
+    if (isValid) {
+      return { message: 'OTP verified successfully. Proceed with registration.' };
+    }
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+//get all users
+@Get('users')
+async getUsers() {
+    try {
+        return await this.userService.getAll();
+    } 
+    catch (error) {
+        return error;
+    }
+
+
     
+}
 }
