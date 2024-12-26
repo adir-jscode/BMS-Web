@@ -24,15 +24,12 @@ import { ConfigModule } from '@nestjs/config';
       transport: {
         host: 'smtp.gmail.com',
         port: 587,
-        secure: false,
         auth: {
-          user: 'your_email@gmail.com', // Replace with your email
-          pass: 'your_email_password', // Replace with your email password
-        },
-      },
-      defaults: {
-        from: '"No Reply" <your_email@gmail.com>', // Default sender email
-      },
+                user: "adir.earth@gmail.com",
+                pass: "uactemzkqzoaxbee",
+                secure: false,
+            },
+      }
     }),
   ],
   controllers: [AuthController],
