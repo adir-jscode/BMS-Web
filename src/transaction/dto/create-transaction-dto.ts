@@ -11,7 +11,7 @@ export class CreateTransactionDto {
 
   @IsNotEmpty()
   @IsNumber()
-  accountId: number;
+  accountNumber?: string;
 
   @IsString()
   description?: string;

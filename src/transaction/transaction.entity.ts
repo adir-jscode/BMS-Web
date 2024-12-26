@@ -7,7 +7,7 @@ export class Transaction {
   id: number;
 
   @Column()
-  type: string; // 'Credit' or 'Debit'
+  type: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number;

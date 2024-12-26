@@ -18,22 +18,25 @@ export class TransactionService {
   ) {}
 
   async createTransaction(dto: CreateTransactionDto): Promise<Transaction> {
-    const account = await this.accountService.findOne(dto.accountId);
+    const account = await this.accountService.getAccountByAccountNumber(dto.accountNumber);
 
     if (!account) {
       throw new NotFoundException('Account not found');
     }
 
-    const transaction = this.transactionRepository.create({
-      ...dto,
-      account,
-    });
-
     
+
+    console.log("before deposit = " + account.balance);
+    console.log(typeof(account.balance));    
     if (dto.type === 'deposit') 
     {
-      account.balance += dto.amount;
-      await this.accountService.updateBalance(account.id, account.balance);
+      console.log("want to add = " + dto.amount);
+      console.log(typeof(dto.amount));
+      const oldBlance = Number(account.balance);
+      console.log("Old balance = " +oldBlance);
+      const newBalance = oldBlance + dto.amount;
+      console.log("Final = " + newBalance);
+      await this.accountService.updateBalance(account.id, newBalance);
     } 
     else 
     {
@@ -44,8 +47,11 @@ export class TransactionService {
       account.balance -= dto.amount;
       await this.accountService.updateBalance(account.id, account.balance);
     }
-    
-
+    const transaction = this.transactionRepository.create({
+      ...dto,
+      account,
+    });
+    //return updated account;
     return this.transactionRepository.save(transaction);
   }
 

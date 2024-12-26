@@ -49,8 +49,11 @@ export class AccountService {
   }
 
   async updateBalance(id: number, amount: number): Promise<Account> {
+    console.log("Before sum = ");
+    console.log("ID = " +id);
+    console.log("Amount (New) = " + amount);
     const account = await this.findOne(id);
-    account.balance += amount;
+    account.balance = amount;
     return this.accountRepository.save(account);
   }
   
@@ -70,5 +73,10 @@ export class AccountService {
   //save
     async save(account: Account): Promise<Account> {
         return this.accountRepository.save(account);
+    }
+
+    //getAccountByAccountNumber
+    async getAccountByAccountNumber(accountNumber: string): Promise<Account> {
+        return this.accountRepository.findOne({ where: { accountNumber } });
     }
 }
