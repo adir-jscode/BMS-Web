@@ -7,7 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 export class AuthService {
 constructor(private userService: UserService,private jwtService: JwtService) {}
 
-        async login(loginDTO: LoginDto): Promise<{ accessToken: string }>  {
+    async login(loginDTO: LoginDto): Promise<{ accessToken: string }>  {
         const user = await this.userService.getByUniqueId(loginDTO.uniqueId); 
         const passwordMatched = await bcrypt.compare(loginDTO.password,user.password);
         if (passwordMatched) 
@@ -27,5 +27,10 @@ constructor(private userService: UserService,private jwtService: JwtService) {}
 
     async validateUser(payload: any) {
         return await this.userService.getByUniqueId(payload.uniqueId);
+    }
+    //logout with manipulating the token
+    async logout() {
+        this.jwtService.sign({uniqueId: null, id: null});
+        return "Logged out successfully";
     }
 }

@@ -8,7 +8,9 @@ import { PassportModule } from "@nestjs/passport";
 import { JWTStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [UserModule,JwtModule.register({ secret: authConstants.secret,signOptions: { expiresIn: '1d' },}),
+  imports: [UserModule,JwtModule.register({ secret: authConstants.secret,signOptions: { 
+    expiresIn: 60 * 5 
+  },}),
     PassportModule
   ],
   controllers: [AuthController],

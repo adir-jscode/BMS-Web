@@ -3,9 +3,11 @@ import { CreateUserDto } from 'src/user/dto/create-user-dto';
 import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login-dto';
 import { AuthService } from './auth.service';
+
 @Controller('auth')
 export class AuthController {
     constructor(private userService: UserService,private authService:AuthService) {}
+
     @Post('signup')
     async signup(@Body() userDTO : CreateUserDto) {
         try {
@@ -26,4 +28,16 @@ export class AuthController {
             return error;
         }
     }
+
+    @Get("logout")
+    async logout() {
+        try {
+            return await this.authService.logout();
+        } 
+        catch (error) {
+            return error;
+        }
+    }
+
+    
 }
