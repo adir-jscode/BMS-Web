@@ -14,7 +14,7 @@ export class CustomerController {
     return this.customerService.create(createCustomerDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //s@UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.customerService.findAll();

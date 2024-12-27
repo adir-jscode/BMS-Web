@@ -11,8 +11,12 @@ export class AuthController {
     @Post('signup')
     async signup(@Body() userDTO : CreateUserDto) {
         try {
-            await this.authService.sendOtpEmail(userDTO.email);
-             await this.userService.create(userDTO);
+            console.log("hited");
+            const sendOtp = await this.authService.sendOtpEmail(userDTO.email);
+            console.log("OTP Sent = "+ sendOtp);
+            const createUser = await this.userService.create(userDTO);
+            console.log("User created " + createUser);
+             console.log(`User created successfully, email sent to ${userDTO.email} `);
              return { message: 'OTP sent to your email. Please verify your email.' };
         } 
         catch (error) {
