@@ -11,13 +11,14 @@ export class AuthController {
     @Post('signup')
     async signup(@Body() userDTO : CreateUserDto) {
         try {
+            
+            const createUser = await this.userService.create(userDTO);
+            console.log("User created " + createUser);
             console.log("hited");
             const sendOtp = await this.authService.sendOtpEmail(userDTO.email);
             console.log("OTP Sent = "+ sendOtp);
-            const createUser = await this.userService.create(userDTO);
-            console.log("User created " + createUser);
-             console.log(`User created successfully, email sent to ${userDTO.email} `);
-             return { message: 'OTP sent to your email. Please verify your email.' };
+            console.log(`User created successfully, email sent to ${userDTO.email} `);
+            return { message: 'OTP sent to your email. Please verify your email.' };
         } 
         catch (error) {
             return error;
@@ -50,7 +51,11 @@ async verifyOtp(@Body() { email, otp }: { email: string, otp: string }) {
   try {
     const isValid = await this.authService.verifyOtp(email, otp);
     if (isValid) {
-      return { message: 'OTP verified successfully. Proceed with registration.' };
+    console.log(email);
+    await this.userService.update(email, { isVerified: true });
+    console.log(this.userService.update(email, { isVerified: true }));
+
+    return { message: 'OTP verified successfully.' };
     }
   } catch (error) {
     return { error: error.message };

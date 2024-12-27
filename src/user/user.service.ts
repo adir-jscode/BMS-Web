@@ -25,4 +25,9 @@ export class UserService {
         async getByUniqueId(uniqueId: any): Promise<User> {
             return await this.userRepository.findOne({ where: { uniqueId } });
         }
+
+        //update isVerified to true
+        async update(email: string, update: Partial<User>) {
+            return await this.userRepository.update({ isVerified: true }, update);
+        }
 }
