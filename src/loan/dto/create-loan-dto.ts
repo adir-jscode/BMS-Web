@@ -1,4 +1,5 @@
-import { IsDecimal, IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, IsString, IsDate } from 'class-validator';
 
 export class CreateLoanDto {
   @IsNotEmpty()
@@ -7,27 +8,28 @@ export class CreateLoanDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @IsDecimal()
   amount: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @IsDecimal()
   interestRate: number;
 
   @IsNotEmpty()
+  @Type(() => Date) // Ensures JSON strings are parsed as Date
   @IsDate()
   startDate: Date;
 
   @IsNotEmpty()
+  @Type(() => Date) // Ensures JSON strings are parsed as Date
   @IsDate()
   endDate: Date;
 
   @IsNotEmpty()
-  @IsNumber()
-  accountId: number;
+  @IsString()
+  accountNumber: string;
 
   @IsNotEmpty()
   @IsNumber()
   customerId: number;
 }
+
