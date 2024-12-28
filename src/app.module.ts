@@ -11,6 +11,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { LoanModule } from './loan/loan.module';
 import { MailerModule } from './mailer/mailer.module';
 import { ConfigModule } from '@nestjs/config';
+import { ReportModule } from './report/report.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(dataSourceOptions),
@@ -20,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     AccountModule,
     TransactionModule,
     LoanModule,
-    MailerModule,ConfigModule.forRoot()],
+    MailerModule,ConfigModule.forRoot(), ReportModule],
   controllers: [AppController],
   providers: [AppService],
 })
