@@ -4,11 +4,12 @@ import { CreateAccountDto } from './dto/create-account-dto';
 import { UpdateAccountDto } from './dto/update-account-dto';
 import { JwtAuthGuard } from 'src/auth/jwt-guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('accounts')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
-  //@UseGuards(JwtAuthGuard)
+
   @Post()
   async create(@Body() createAccountDto: CreateAccountDto) {
     return this.accountService.create(createAccountDto);
@@ -28,12 +29,12 @@ export class AccountController {
   async update(@Param('id') id: number, @Body() updateAccountDto: UpdateAccountDto) {
     return this.accountService.update(id, updateAccountDto);
   }
-  @UseGuards(JwtAuthGuard)
+ 
   @Post(':id/deactivate')
   async deactivate(@Param('id') id: number) {
     return this.accountService.deactivate(id);
   }
-  @UseGuards(JwtAuthGuard)
+  
   @Post(':id/activate')
   async activate(@Param('id') id: number) {
     return this.accountService.activate(id);

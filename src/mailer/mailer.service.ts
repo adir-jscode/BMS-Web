@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { EmailDto } from './dto/email.dto';
+import { TransactionEmailDto } from './dto/transaction.email.dto';
 @Injectable()
 export class MailerService {
     constructor(private configService:ConfigService) {}
@@ -30,6 +31,28 @@ export class MailerService {
             html: html,
         }
         console.log(this.configService.get<string>('EMAIL_USER'));
+        try{
+            await transporter.sendMail( options );  
+            console.log('Email sent successfully');
+        }
+        catch(error){
+            console.error('Error occurred while sending email', error);
+        }
+    }
+
+    //send transaction receipt to customer
+    async sendTransactionReceipt(EmailDto : TransactionEmailDto){
+        const {subject, text, html,attachment} = EmailDto;
+        const transporter = this.emailTransport();
+        const options : nodemailer.SendMailOptions = {
+            from: this.configService.get<string>('EMAIL_USER'),
+            to: EmailDto.recipient,
+            subject: subject,
+            text: text,
+            html: html,
+            attachments:attachment
+            
+        }
         try{
             await transporter.sendMail( options );  
             console.log('Email sent successfully');

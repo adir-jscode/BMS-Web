@@ -154,4 +154,13 @@ export class TransactionService {
 
     return transaction;
   }
+
+  //getTransactionsByAccountNumber
+  async getTransactionsByAccountNumber(accountNumber: string): Promise<Transaction[]> {
+  return await this.transactionRepository.find({
+    where: { account: { accountNumber } }, // Ensure the nested `account` property is correct
+    relations: ['account'], // Load the `account` relationship
+  });
+}
+
 }

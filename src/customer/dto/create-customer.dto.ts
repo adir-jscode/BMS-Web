@@ -13,7 +13,7 @@ export class CreateCustomerDto {
   @IsNotEmpty()
   email: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('BD')
   @IsNotEmpty()
   phoneNumber: string;
 

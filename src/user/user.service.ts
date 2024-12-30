@@ -26,8 +26,20 @@ export class UserService {
             return await this.userRepository.findOne({ where: { uniqueId } });
         }
 
-        //update isVerified to true
+        
         async update(email: string, update: Partial<User>) {
-            return await this.userRepository.update({ isVerified: true }, update);
+        
+              const user = await this.userRepository.findOne({ where: { email } });
+                if (!user) {
+                    return null;
+                }
+                Object.assign(user, update);
+                return await this.userRepository.save(user);
         }
+
+       
+        async getProfile(uniqueId: string) {
+            return await this.userRepository.findOne({ where: { uniqueId } });
+        }
+        
 }

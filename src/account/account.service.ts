@@ -5,6 +5,7 @@ import { Account } from './account.entity';
 import { Customer } from 'src/customer/customer.entity';
 import { CreateAccountDto } from './dto/create-account-dto';
 import { UpdateAccountDto } from './dto/update-account-dto';
+import { MailerService } from 'src/mailer/mailer.service';
 
 
 @Injectable()
@@ -12,6 +13,7 @@ export class AccountService {
   constructor(
     @InjectRepository(Account) private accountRepository: Repository<Account>,
     @InjectRepository(Customer) private customerRepository: Repository<Customer>,
+    private mailerService: MailerService,
   ) {}
 
   async create(createAccountDto: CreateAccountDto): Promise<Account> {
@@ -25,6 +27,26 @@ export class AccountService {
       ...createAccountDto,
       balance: createAccountDto.initialDeposit,
       customer,
+    });
+
+    //send email to customer
+    await this.mailerService.sendMails({
+      recipient: [customer.email],
+      subject: 'Account Creation Notification',
+      text: 'Good Morning',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Account Creation Notification</title>
+        </head>
+        <body>
+          <p>Dear ${customer.firstName},</p>
+          <p>Your account has been successfully created.</p>
+          <p>Thank you for banking with us.</p>
+        </body>
+        </html>
+      `,
     });
 
     return this.accountRepository.save(account);

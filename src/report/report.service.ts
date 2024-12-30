@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Transaction } from 'src/transaction/transaction.entity';
 import * as PDFDocument from 'pdfkit';
+import { TransactionService } from 'src/transaction/transaction.service';
+import { CustomerService } from 'src/customer/customer.service';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class ReportService {
+
+constructor(private transactionService: TransactionService,private customerService : CustomerService,private mailService : MailerService){}
 async generateTransactionReport(transactions: Transaction[], res: any): Promise<void> {
     const doc = new PDFDocument({ margin: 30 });
     const fileName = 'transaction-report.pdf';
@@ -69,5 +74,23 @@ async generateTransactionReport(transactions: Transaction[], res: any): Promise<
 }
 
 
+async sendTransactionReport(res: any,accountNumber:string): Promise<void> {
+    const transactions = await this.transactionService.getTransactionsByAccountNumber(accountNumber);
+    const user = await this.customerService.getCustomerByAccountNumber(accountNumber);
+    const email = user.email;
+    console.log("Mail is sending to = " , email);
 
+    await this.generateTransactionReport(transactions, res);
+    await this.mailService.sendTransactionReceipt({
+        recipient: email,
+        subject: 'Transaction Report',
+        text: 'Please find the attached transaction report',
+        html: 'Please find the attached transaction report',
+        attachment: res,
+    });
+    return res;
+
+
+
+}
 }

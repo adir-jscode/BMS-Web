@@ -33,4 +33,8 @@ export class CustomerService {
   async remove(id: number): Promise<void> {
     await this.customerRepository.delete(id);
   }
+
+  async getCustomerByAccountNumber(accountNumber: string): Promise<Customer> {
+    return this.customerRepository.findOne({ where: {accounts: { accountNumber }, }, relations: ['account'] });
+  }
 }

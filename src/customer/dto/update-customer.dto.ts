@@ -14,7 +14,7 @@ export class UpdateCustomerDto {
   email?: string;
 
   @IsOptional()
-  @IsPhoneNumber()
+  @IsPhoneNumber('BD')
   phoneNumber?: string;
 
   @IsOptional()

@@ -31,17 +31,17 @@ constructor(private userService: UserService,private jwtService: JwtService,priv
     async validateUser(payload: any) {
         return await this.userService.getByUniqueId(payload.uniqueId);
     }
-    //logout with manipulating the token
+    
     async logout() {
         this.jwtService.sign({uniqueId: null, id: null});
         return "Logged out successfully";
     }
 
      async sendOtpEmail(userEmail: string) {
-    // Generate OTP
+    
     const otp = crypto.randomInt(100000, 999999).toString();
 
-    // Store OTP with expiration time (e.g., 5 minutes)
+   
     this.otpStore.set(userEmail, { otp, expiresAt: Date.now() + 5 * 60 * 1000 });
 
     await this.mailerService.sendMail({
@@ -154,7 +154,7 @@ constructor(private userService: UserService,private jwtService: JwtService,priv
       throw new Error('Invalid OTP.');
     }
 
-    this.otpStore.delete(userEmail); // Delete OTP after successful verification
+    this.otpStore.delete(userEmail); 
     return true;
   }
 }

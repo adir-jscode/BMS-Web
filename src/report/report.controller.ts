@@ -14,4 +14,13 @@ export class ReportController {
     const transactions = await this.transactionService.getTransactions(); // Fetch all transactions
     await this.reportService.generateTransactionReport(transactions, res);
   }
+
+  //sendTransactionReport based on account number
+  @Get('transactions/:accountNumber')
+  async sendTransactionReport(@Res() res, accountNumber: string): Promise<void> {
+    const transactions = await this.transactionService.getTransactionsByAccountNumber(accountNumber);
+    console.log(transactions);
+    await this.reportService.generateTransactionReport(transactions, res);
+    await this.reportService.sendTransactionReport(transactions, accountNumber);
+  }
 }
