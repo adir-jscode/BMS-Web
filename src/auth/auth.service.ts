@@ -8,7 +8,7 @@ import * as crypto from 'crypto';
 @Injectable()
 export class AuthService {
     private otpStore = new Map<string, { otp: string; expiresAt: number }>();
-constructor(private userService: UserService,private jwtService: JwtService,private mailerService:MailerService) {}
+    constructor(private userService: UserService,private jwtService: JwtService,private mailerService:MailerService) {}
 
     async login(loginDTO: LoginDto): Promise<{ accessToken: string }>  {
         const user = await this.userService.getByUniqueId(loginDTO.uniqueId); 
