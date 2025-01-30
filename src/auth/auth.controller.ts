@@ -29,24 +29,33 @@ export class AuthController {
 
     @Post("login")
     async login(@Body() loginDTO: LoginDto, @Res() res: Response) {
-        try {
-            return res.cookie('token', await this.authService.login(loginDTO), { httpOnly: true });
-            
-        } 
-        catch (error) {
-            return error;
-        }
-    }
+    try {
+        console.log("hited route");
 
-    @Get("logout")
-    async logout() {
-        try {
-            return await this.authService.logout();
-        } 
-        catch (error) {
-            return error;
-        }
+        const token = await this.authService.login(loginDTO);
+        console.log("token", token);
+
+        res.cookie('token', token.accessToken, { httpOnly: true });
+
+        return res.status(200).json({ message: "Login successful", accessToken: token.accessToken });
+    } 
+    catch (error) {
+        console.error("Login error:", error);
+
+        return res.status(401).json({ message: "Invalid credentials", error: error.message });
     }
+}
+
+
+@Get("logout")
+async logout(@Res() res: Response) {
+  try {
+    res.clearCookie("token", { httpOnly: true, path: "/" }); // Clears cookie
+    return res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Logout failed:",error: error.message });
+  }
+}
 
 @Post('verify-otp')
 async verifyOtp(@Body() { email, otp }: { email: string, otp: string }) {

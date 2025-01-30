@@ -11,15 +11,20 @@ export class AuthService {
     constructor(private userService: UserService,private jwtService: JwtService,private mailerService:MailerService) {}
 
     async login(loginDTO: LoginDto): Promise<{ accessToken: string }>  {
-        const user = await this.userService.getByUniqueId(loginDTO.uniqueId); 
+        const user = await this.userService.getByUniqueId(loginDTO.uniqueId);
+        console.log("user found",user); 
         const passwordMatched = await bcrypt.compare(loginDTO.password,user.password);
         if (passwordMatched) 
         {
+            console.log("password matched");
             delete user.password;
             const response = {uniqueId : user.uniqueId, id: user.id};
-            return {
-                accessToken: this.jwtService.sign(response)
-            };
+            const token = this.jwtService.sign(response);
+            console.log("token", token);
+        
+            return { accessToken: token };
+           
+            
         } 
         else 
         {
