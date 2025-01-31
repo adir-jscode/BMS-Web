@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user-dto';
 import { UserService } from 'src/user/user.service';
@@ -28,23 +28,35 @@ export class AuthController {
     }
 
     @Post("login")
-    async login(@Body() loginDTO: LoginDto, @Res() res: Response) {
+  async login(@Body() loginDTO: LoginDto, @Res() res: Response) {
     try {
-        console.log("hited route");
+      console.log("Login request received");
 
-        const token = await this.authService.login(loginDTO);
-        console.log("token", token);
+      const { accessToken, user } = await this.authService.login(loginDTO);
 
-        res.cookie('token', token.accessToken, { httpOnly: true });
+      // Set secure cookie with the token
+      res.cookie("token", accessToken, {
+        httpOnly: true,
+        secure: true, // Enable this in production
+        sameSite: "strict",
+        maxAge: 24 * 60 * 60 * 1000, // 1 day
+      });
 
-        return res.status(200).json({ message: "Login successful", accessToken: token.accessToken });
-    } 
-    catch (error) {
-        console.error("Login error:", error);
+      console.log("user info", user);
 
-        return res.status(401).json({ message: "Invalid credentials", error: error.message });
+      return res.status(HttpStatus.OK).json({
+        message: "Login successful",
+        user, // Send user details to frontend
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        message: "Invalid credentials",
+        error: error.message,
+      });
     }
-}
+  }
 
 
 @Get("logout")

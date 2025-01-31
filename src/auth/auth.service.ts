@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from "./dto/login-dto";
 import { UserService } from "src/user/user.service";
@@ -10,27 +10,26 @@ export class AuthService {
     private otpStore = new Map<string, { otp: string; expiresAt: number }>();
     constructor(private userService: UserService,private jwtService: JwtService,private mailerService:MailerService) {}
 
-    async login(loginDTO: LoginDto): Promise<{ accessToken: string }>  {
-        const user = await this.userService.getByUniqueId(loginDTO.uniqueId);
-        console.log("user found",user); 
-        const passwordMatched = await bcrypt.compare(loginDTO.password,user.password);
-        if (passwordMatched) 
-        {
-            console.log("password matched");
-            delete user.password;
-            const response = {uniqueId : user.uniqueId, id: user.id};
-            const token = this.jwtService.sign(response);
-            console.log("token", token);
-        
-            return { accessToken: token };
-           
-            
-        } 
-        else 
-        {
-            throw new UnauthorizedException("Password does not match"); 
-        }
-
+    async login(loginDTO: LoginDto): Promise<{ accessToken: string; user: { id: string; uniqueId: string } }> {
+      const user = await this.userService.getByUniqueId(loginDTO.uniqueId);
+      
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+  
+      const passwordMatched = await bcrypt.compare(loginDTO.password, user.password);
+      if (!passwordMatched) {
+        throw new UnauthorizedException("Invalid credentials");
+      }
+  
+      
+      delete user.password;
+  
+      
+      const payload = { id: user.id.toString(), uniqueId: user.uniqueId };
+      const accessToken = this.jwtService.sign(payload);
+  
+      return { accessToken, user: payload };
     }
 
     async validateUser(payload: any) {
